@@ -7,8 +7,9 @@ declare module "@supermap/iclient-ol" {
     LineString as olLineString,
     Point as olPoint,
     Polygon as olPolygon,
-  } from "ol/geom/";
+  } from "ol/geom";
   import type { Extent } from "ol/extent";
+  import olGeoJSON from "ol/format/GeoJSON";
   import type { Options as TileImageOptions } from "ol/source/TileImage";
 
   export class LonLat {
@@ -731,6 +732,276 @@ declare module "@supermap/iclient-ol" {
   export function SpatialAnalystCallback(
     serviceResult: spatialAnalystResult
   ): void;
+
+  export enum BufferEndType {
+    FLAT = "FLAT",
+    ROUND = "ROUND",
+  }
+
+  export interface BufferDistanceOptions {
+    exp?: string;
+    value?: number;
+  }
+
+  export class BufferDistance implements BufferDistanceOptions {
+    constructor(options: BufferDistanceOptions);
+    exp?: string;
+    value?: number;
+  }
+
+  export enum BufferRadiusUnit {
+    CENTIMETER = "CENTIMETER",
+    DECIMETER = "DECIMETER",
+    FOOT = "FOOT",
+    INCH = "INCH",
+    KILOMETER = "KILOMETER",
+    METER = "METER",
+    MILE = "MILE",
+    MILLIMETER = "MILLIMETER",
+    YARD = "YARD",
+  }
+
+  export interface BufferSettingOptions {
+    endType?: BufferEndType;
+    leftDistance?: BufferDistance;
+    rightDistance?: BufferDistance;
+    semicircleLineSegment?: number;
+    radiusUnit?: BufferRadiusUnit;
+  }
+  export class BufferSetting implements BufferSettingOptions {
+    constructor(options: Record<string, any>);
+    endType: BufferEndType;
+    leftDistance: BufferDistance;
+    rightDistance: BufferDistance;
+    radiusUnit: BufferRadiusUnit;
+    semicircleLineSegment: number;
+    radiusUnit: BufferRadiusUnit;
+  }
+  export class BufferAnalystParameters {
+    constructor(options: { bufferSetting: BufferSetting });
+    bufferSetting: BufferSetting;
+  }
+  export interface DatasetBufferAnalystParametersOptions {
+    dataset: string;
+    filterQueryParameter?: FilterParameter;
+    resultSetting?: DataReturnOption;
+    isAttributeRetained?: boolean;
+    isUnion?: boolean;
+    bufferSetting?: BufferSetting;
+  }
+  export class DatasetBufferAnalystParameters extends BufferAnalystParameters {
+    constructor(options: DatasetBufferAnalystParametersOptions);
+    dataset: string;
+    filterQueryParameter?: FilterParameter;
+    resultSetting?: DataReturnOption;
+    isAttributeRetained: boolean;
+    isUnion: boolean;
+    bufferSetting?: BufferSetting;
+    toObject(
+      datasetBufferAnalystParameters: DatasetBufferAnalystParameters,
+      tempObj: DatasetBufferAnalystParameters
+    ): Record<string, any>;
+  }
+
+  export class GeometryBufferAnalystParameters extends BufferAnalystParameters {
+    constructor(options: {
+      sourceGeometry: Geometry | olPolygon | olPoint | olLineString | olGeoJSON;
+      bufferSetting: BufferSetting;
+    });
+    sourceGeometry: Geometry | olPolygon | olPoint | olLineString | olGeoJSON;
+    bufferSetting: BufferSetting;
+    sourceGeometrySRID: number;
+    toObject(
+      geometryBufferAnalystParameters: GeometryBufferAnalystParameters,
+      tempObj: GeometryBufferAnalystParameters
+    ): Record<string, any>;
+  }
+
+  export enum PixelFormat {
+    BIT16 = "BIT16",
+    BIT32 = "BIT32",
+    BIT64 = "BIT64",
+    SINGLE = "SINGLE",
+    DOUBLE = "DOUBLE",
+    UBIT1 = "UBIT1",
+    UBIT4 = "UBIT4",
+    UBIT8 = "UBIT8",
+    UBIT24 = "UBIT24",
+    UBIT32 = "UBIT32",
+  }
+
+  export enum SearchMode {
+    KDTREE_FIXED_COUNT = "KDTREE_FIXED_COUNT",
+    KDTREE_FIXED_RADIUS = "KDTREE_FIXED_RADIUS",
+    NONE = "NONE",
+    QUADTREE = "QUADTREE",
+  }
+
+  export interface interpolationRBFAnalystParametersOptions {
+    bounds: Bounds | Extent;
+    searchMode: SearchMode;
+    outputDatasetName: string;
+    outputDatasourceName: string;
+    zValueFieldName?: string;
+    smooth?: number;
+    tension?: number;
+    expectedCount?: number;
+    searchRadius?: number;
+    maxPointCountForInterpolation?: number;
+    maxPointCountInNode?: number;
+    zValueScale?: number;
+    resolution?: number;
+    filterQueryParameter?: FilterParameter;
+    pixelFormat?: PixelFormat;
+    dataset?: string;
+    inputPoints?: Array<Geometry.Point | olPoint>;
+  }
+
+  export class interpolationRBFAnalystParameters {
+    constructor(options: interpolationRBFAnalystParametersOptions);
+
+    bounds: Bounds | Extent;
+    clipParam: Record<string, any>;
+    dataset?: string;
+    expectedCount: number;
+    filterQueryParameter?: FilterParameter;
+    interpolationAnalystType: string;
+    maxPointCountForInterpolationnumber: number;
+    maxPointCountInNode: number;
+    outputDatasetName?: string;
+    outputDatasourceName?: string;
+    pixelFormat: PixelFormat;
+    resolution: number;
+    searchMode: SearchMode;
+    searchRadius: number;
+    smooth: number;
+    tension: number;
+    zValueFieldName: string;
+    zValueScale: number;
+  }
+
+  export enum SmoothMethod {
+    BSPLINE = "BSPLINE",
+    POLISH = "POLISH",
+  }
+
+  export interface SurfaceAnalystParametersSettingOptions {
+    clipRegion?: Geometry.Polygon | olPolygon;
+    datumValue?: number;
+    expectedZValues: number[];
+    interval?: number;
+    resampleTOlerance?: number;
+    smoothMethod?: SmoothMethod;
+    smoothness?: number;
+  }
+  export class SurfaceAnalystParametersSetting {
+    constructor(options: SurfaceAnalystParametersSettingOptions);
+    clipRegion?: Geometry.Polygon | olPolygon;
+    datumValue?: number;
+    expectedZValues: number[];
+    interval?: number;
+    resampleTOlerance?: number;
+    smoothMethod?: SmoothMethod;
+    smoothness?: number;
+  }
+  export enum SurfaceAnalystMethod {
+    ISOLINE = "ISOLINE",
+    ISOREGION = "ISOREGION",
+  }
+
+  export interface SurfaceAnalystParametersOptions {
+    extractParameter: SurfaceAnalystParametersSetting;
+    resolution: number;
+    resultSetting: DataReturnOption;
+    surfaceAnalystMethod?: SurfaceAnalystMethod;
+  }
+
+  export class SurfaceAnalystParameters {
+    constructor(options: SurfaceAnalystParametersOptions);
+    extractParameter: SurfaceAnalystParametersSetting;
+    resolution: number;
+    resultSetting: DataReturnOption;
+    surfaceAnalystMethod?: SurfaceAnalystMethod;
+  }
+
+  export interface DensityKernelAnalystParametersOptions {
+    dataset: string;
+    fieldName: string;
+    resultGridName: string;
+    bounds?: Bounds | Extent;
+    searchRadius?: number;
+    resultGridDatasetResolution?: number;
+    targetDatasource?: string;
+    deleteExistResultDataset?: boolean;
+  }
+  export class DensityKernelAnalystParameters {
+    constructor(options: DensityKernelAnalystParametersOptions);
+    dataset: string;
+    fieldName: string;
+    resultGridName: string;
+    bounds?: Bounds | Extent;
+    searchRadius?: number;
+    resultGridDatasetResolution?: number;
+    targetDatasource?: string;
+    deleteExistResultDataset?: boolean;
+  }
+
+  export interface GenerateSpatialDataParametersOptions {
+    routeTable: string;
+    routeIDField: string;
+    dataReturnOption: DataReturnMode;
+    attributeFilter?: string;
+    eventTable: string;
+    eventRouteIDField: string;
+    measureField?: string;
+    measureStartField?: string;
+    measureEndField?: string;
+    errorInfoField?: string;
+    retained?: string[];
+  }
+  export class GenerateSpatialDataParameters {
+    constructor(options: GenerateSpatialDataParametersOptions);
+    routeTable: string;
+    routeIDField: string;
+    dataReturnOption: DataReturnMode;
+    attributeFilter?: string;
+    eventTable: string;
+    eventRouteIDField: string;
+    measureField?: string;
+    measureStartField?: string;
+    measureEndField?: string;
+    errorInfoField?: string;
+    retained?: string[];
+  }
+
+  export enum SpatialRelationType {
+    CONTAIN = "CONTAIN",
+    INTERSECT = "INTERSECT",
+    WITHIN = "WITHIN",
+  }
+
+  export interface GeoRelationAnalystParametersOptions {
+    sourceFilter: FilterParameter;
+    referenceFilter: FilterParameter;
+    spatialRelationType: SpatialRelationType;
+    isBorderInside?: boolean;
+    returnFeature?: boolean;
+    returnGeoRelatedOnly?: boolean;
+    startRecord?: number;
+    expectCount?: number;
+  }
+  export class GeoRelationAnalystParameters {
+    constructor(options: GeoRelationAnalystParametersOptions);
+    sourceFilter: FilterParameter;
+    referenceFilter: FilterParameter;
+    spatialRelationType: SpatialRelationType;
+    isBorderInside?: boolean;
+    returnFeature?: boolean;
+    returnGeoRelatedOnly?: boolean;
+    startRecord?: number;
+    expectCount?: number;
+  }
+
   export class SpatialAnalystService extends ServiceBase {
     overlayAnalysis(
       params:
@@ -741,7 +1012,48 @@ declare module "@supermap/iclient-ol" {
     );
 
     bufferAnalysis(
-      params,
+      params: DatasetBufferAnalystParameters | GeometryBufferAnalystParameters,
+      callback: typeof RequestCallback,
+      resultFormat?: DataFormat
+    );
+
+    densityAnalysis(
+      params: DensityKernelAnalystParameters,
+      callback: typeof SpatialAnalystCallback,
+      resultFormat?: DataFormat
+    );
+
+    generateSpatialData(
+      params: GenerateSpatialDataParameters,
+      callback: typeof SpatialAnalystCallback,
+      resultFormat?: DataFormat
+    );
+
+    geometrybatchAnalysis(
+      params: Array<{
+        analystName: string;
+        param:
+          | GeometryOverlayAnalystParameters
+          | GeometryBufferAnalystParameters
+          | interpolationRBFAnalystParameters;
+      }>,
+      callback: typeof RequestCallback,
+      resultFormat?: DataFormat
+    );
+
+    geoRelationAnalysis(
+      params: GeoRelationAnalystParameters,
+      callback: typeof RequestCallback,
+      resultFormat?: DataFormat
+    );
+
+    interpolationAnalysis(
+      params: interpolationRBFAnalystParameters,
+      callback: typeof RequestCallback,
+      resultFormat?: DataFormat
+    );
+    surfaceAnalysis(
+      params: SurfaceAnalystParameters,
       callback: typeof RequestCallback,
       resultFormat?: DataFormat
     );
