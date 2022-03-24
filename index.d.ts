@@ -319,12 +319,12 @@ declare module "@supermap/iclient-ol" {
   export class FilterParameter implements FilterParameterOptions {
     attributeFilter: string;
     name: string;
-    joinItems: JoinItem[];
-    linkItems: LinkItem[];
-    ids: Array<string>;
-    orderBy: string;
-    groupBy: string;
-    fields: Array<string>;
+    joinItems?: JoinItem[];
+    linkItems?: LinkItem[];
+    ids?: Array<string>;
+    orderBy?: string;
+    groupBy?: string;
+    fields?: Array<string>;
     constructor(options: FilterParameterOptions);
     destroy(): void;
   }
