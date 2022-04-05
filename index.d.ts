@@ -1065,7 +1065,7 @@ declare module "@supermap/iclient-ol" {
 
   export interface MapvOptions {
     map: Map;
-    dataset: any;
+    dataSet: any;
     mapvOptions: Record<string, any>;
     attributions?: string;
     state?: string | any;
