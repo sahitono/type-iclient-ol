@@ -10,7 +10,7 @@
     "strict": true,
     "esModuleInterop": true,
     "incremental": false,
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "noUnusedLocals": true,

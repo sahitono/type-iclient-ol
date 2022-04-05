@@ -11,6 +11,10 @@ declare module "@supermap/iclient-ol" {
   import type { Extent } from "ol/extent";
   import olGeoJSON from "ol/format/GeoJSON";
   import type { Options as TileImageOptions } from "ol/source/TileImage";
+  import type * as State from "ol/source/State";
+  import ImageCanvasSource from "ol/source/ImageCanvas";
+  import type { Map } from "ol";
+  import type { ProjectionLike } from "ol/proj";
 
   export class LonLat {
     constructor(lon?: number, lat?: number, location?: number[]);
@@ -222,7 +226,7 @@ declare module "@supermap/iclient-ol" {
       fid: string;
       bounds: Bounds;
       id: string;
-      lonlat: Lonlat;
+      lonlat: LonLat;
       state: string;
       url: string;
       toState(state: string): void;
@@ -572,7 +576,7 @@ declare module "@supermap/iclient-ol" {
   export interface EditFeaturesParametersOptions {
     features:
       | Array<Record<string, any>>
-      | Array<olFeature>
+      | Array<olFeature<any>>
       | Array<Feature.Vector>;
     dataSetName: string;
     dataSourceName: string;
@@ -587,7 +591,7 @@ declare module "@supermap/iclient-ol" {
     editType: EditType;
     features:
       | Array<Record<string, any>>
-      | Array<olFeature>
+      | Array<olFeature<any>>
       | Array<Feature.Vector>;
     IDs: Array<string | number>;
     isUseBatch: boolean;
@@ -626,7 +630,7 @@ declare module "@supermap/iclient-ol" {
   }
   export class DataReturnOption {
     constructor(options: DataReturnOptionOptions);
-    destroy();
+    destroy(): void;
   }
 
   export enum OverlayOperationType {
@@ -643,7 +647,7 @@ declare module "@supermap/iclient-ol" {
     sourceDataset: string;
     operateDatasetFields?: string[];
     operateDatasetFilter?: FilterParameter;
-    operateRegions?: Array<Geometry.Polygon | olGeometry.Polygon>;
+    operateRegions?: Array<Geometry.Polygon | olPolygon>;
     sourceDatasetFields?: string[];
     sourceDatasetFilter?: FilterParameter;
     tolerance?: number;
@@ -658,7 +662,7 @@ declare module "@supermap/iclient-ol" {
     toObject(
       datasetOverlayAnalystParameters: DatasetOverlayAnalystParameters,
       tempObj: DatasetOverlayAnalystParameters
-    );
+    ): void;
   }
 
   export class OverlayAnalystParameters {
@@ -708,7 +712,7 @@ declare module "@supermap/iclient-ol" {
     toObject(
       datasetOverlayAnalystParameters: DatasetOverlayAnalystParameters,
       tempObj: DatasetOverlayAnalystParameters
-    );
+    ): void;
   }
 
   export interface spatialAnalystResult {
@@ -775,7 +779,6 @@ declare module "@supermap/iclient-ol" {
     rightDistance: BufferDistance;
     radiusUnit: BufferRadiusUnit;
     semicircleLineSegment: number;
-    radiusUnit: BufferRadiusUnit;
   }
   export class BufferAnalystParameters {
     constructor(options: { bufferSetting: BufferSetting });
@@ -796,7 +799,7 @@ declare module "@supermap/iclient-ol" {
     resultSetting?: DataReturnOption;
     isAttributeRetained: boolean;
     isUnion: boolean;
-    bufferSetting?: BufferSetting;
+    bufferSetting: BufferSetting;
     toObject(
       datasetBufferAnalystParameters: DatasetBufferAnalystParameters,
       tempObj: DatasetBufferAnalystParameters
@@ -1009,25 +1012,25 @@ declare module "@supermap/iclient-ol" {
         | GeometryOverlayAnalystParameters,
       callback: typeof SpatialAnalystCallback,
       resultFormat?: DataFormat
-    );
+    ): void;
 
     bufferAnalysis(
       params: DatasetBufferAnalystParameters | GeometryBufferAnalystParameters,
       callback: typeof RequestCallback,
       resultFormat?: DataFormat
-    );
+    ): void;
 
     densityAnalysis(
       params: DensityKernelAnalystParameters,
       callback: typeof SpatialAnalystCallback,
       resultFormat?: DataFormat
-    );
+    ): void;
 
     generateSpatialData(
       params: GenerateSpatialDataParameters,
       callback: typeof SpatialAnalystCallback,
       resultFormat?: DataFormat
-    );
+    ): void;
 
     geometrybatchAnalysis(
       params: Array<{
@@ -1039,23 +1042,45 @@ declare module "@supermap/iclient-ol" {
       }>,
       callback: typeof RequestCallback,
       resultFormat?: DataFormat
-    );
+    ): void;
 
     geoRelationAnalysis(
       params: GeoRelationAnalystParameters,
       callback: typeof RequestCallback,
       resultFormat?: DataFormat
-    );
+    ): void;
 
     interpolationAnalysis(
       params: interpolationRBFAnalystParameters,
       callback: typeof RequestCallback,
       resultFormat?: DataFormat
-    );
+    ): void;
+
     surfaceAnalysis(
       params: SurfaceAnalystParameters,
       callback: typeof RequestCallback,
       resultFormat?: DataFormat
-    );
+    ): void;
+  }
+
+  export interface MapvOptions {
+    map: Map;
+    dataset: any;
+    mapvOptions: Record<string, any>;
+    attributions?: string;
+    state?: string | any;
+    projection?: ProjectionLike;
+    resolutions?: number[];
+  }
+
+  export class Mapv extends ImageCanvasSource {
+    constructor(options: MapvOptions);
+
+    addData(data: Record<string, any>, options: Record<string, any>): void;
+    clearData(): void;
+    getData(): Record<string, any>;
+    removeData(filter: (data: Record<string, any>) => boolean): void;
+    setData(): void;
+    update(options: Record<string, any>): void;
   }
 }
