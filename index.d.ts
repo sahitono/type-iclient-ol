@@ -512,28 +512,52 @@ declare module "@supermap/iclient-ol" {
   }
   export function RequestCallback(serviceResult: serviceResult): void;
 
+  export interface queryServiceResult {
+    type: string;
+    element?: any;
+    error?: {
+      code: number;
+      errorMsg: string;
+    };
+    object?: Record<string, any>;
+    result?: {
+      currentCount: number;
+      customResponse?: Record<string, any>;
+      recordsets: Array<{
+        datasetName: string;
+        features: GeoJSON.FeatureCollection;
+        fieldCaptions: string[];
+        fieldTypers: string[];
+        fields: string[];
+      }>;
+      succeed: boolean;
+      totalCount?: number;
+    };
+  }
+
+  type QueryServiceCallback = (result: queryServiceResult) => void;
   export class QueryService extends ServiceBase {
     queryByBounds(
       params: QueryByBoundsParameters,
-      callback: typeof RequestCallback,
+      callback: QueryServiceCallback,
       resultFormat?: DataFormat
     ): void;
 
     queryByDistance(
       params: QueryByDistanceParameters,
-      callback: typeof RequestCallback,
+      callback: QueryServiceCallback,
       resultFormat?: DataFormat
     ): void;
 
     queryByGeometry(
       params: QueryByGeometryParameters,
-      callback: typeof RequestCallback,
+      callback: QueryServiceCallback,
       resultFormat?: DataFormat
     ): void;
 
     queryBySQL(
       params: QueryBySQLParameters,
-      callback: typeof RequestCallback,
+      callback: QueryServiceCallback,
       resultFormat?: DataFormat
     ): void;
 
