@@ -1042,7 +1042,7 @@ declare module "@supermap/iclient-ol" {
 
     bufferAnalysis(
       params: DatasetBufferAnalystParameters | GeometryBufferAnalystParameters,
-      callback: typeof RequestCallback,
+      callback: typeof SpatialAnalystCallback,
       resultFormat?: DataFormat
     ): void;
 
