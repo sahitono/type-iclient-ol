@@ -742,20 +742,22 @@ declare module "@supermap/iclient-ol" {
   export interface spatialAnalystResult {
     result?: {
       dataset?: string;
+      image?: any;
       message?: string;
-      recordset: {
+      recordset?: {
         datasetName?: string;
         features: GeoJSON.FeatureCollection;
         fieldTypes: string[];
         fields: string[];
         fieldCaptions: string[];
       };
+      resultGeometry?: GeoJSON.Feature<GeoJSON.MultiPolygon>;
       succeed: boolean;
     };
     object: Record<string, any>;
     error?: Record<string, any>;
     type: string;
-    element: Record<string, any>;
+    element?: any;
   }
   export function SpatialAnalystCallback(
     serviceResult: spatialAnalystResult
