@@ -17,7 +17,40 @@ declare module "@supermap/iclient-ol" {
   import type { ProjectionLike } from "ol/proj";
 
   export class SecurityManager {
+    INNER_WINDOW_HEIGHT: number;
+    INNER_WINDOW_WIDTH: number;
+    ONLINE: string;
+    SSO: string;
+    keys: Record<string, string>;
+    tokens: Record<string, string>;
+    static appendCredential(url: string): string;
+    static destroyAllCredentials(): void;
+    static destroyKey(url: string): void;
+    static destroyToken(url: string): void;
+    static generateToken(url: string, tokenParam: Record<string, any>): string;
+    static getKey(id: string): string;
+    static getServerInfo(url: string): unknown;
+    static getToken(url: string): string;
     static registerKey(serviceUrl: string, key: string): void;
+    static loginManager(
+      url: string,
+      loginInfoParams: Record<string, any>,
+      options: Record<string, any>
+    ): void;
+    static loginOnline(callbackLocation: any, newTab: any): unknown;
+    static loginiPortal(
+      url: string,
+      username: string,
+      password: string
+    ): unknown;
+    static loginiServer(
+      url: string,
+      username: string,
+      password: string,
+      rememberme: boolean
+    ): unknown;
+    static logoutiPortal(url: string): unknown;
+    static logoutiServer(url: string): unknown;
   }
 
   export class LonLat {
