@@ -16,6 +16,10 @@ declare module "@supermap/iclient-ol" {
   import type { Map } from "ol";
   import type { ProjectionLike } from "ol/proj";
 
+  export class SecurityManager {
+    static registerKey(serviceUrl: string, key: string): void;
+  }
+
   export class LonLat {
     constructor(lon?: number, lat?: number, location?: number[]);
     lon: number;
