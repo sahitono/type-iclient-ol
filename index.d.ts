@@ -31,7 +31,8 @@ declare module "@supermap/iclient-ol" {
     static getKey(id: string): string;
     static getServerInfo(url: string): unknown;
     static getToken(url: string): string;
-    static registerKey(serviceUrl: string, key: string): void;
+    static registerKey(ids: string, key: string): void;
+    static registerToken(url: string, token: string): void;
     static loginManager(
       url: string,
       loginInfoParams: Record<string, any>,
